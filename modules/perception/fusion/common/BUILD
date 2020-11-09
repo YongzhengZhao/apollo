@@ -1,3 +1,4 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 load("//tools:cpplint.bzl", "cpplint")
 
 package(default_visibility = ["//visibility:public"])
@@ -86,6 +87,7 @@ cc_test(
     name = "kalman_filter_test",
     size = "small",
     srcs = ["kalman_filter_test.cc"],
+    copts = ["-fno-access-control"],
     deps = [
         ":kalman_filter",
         "//modules/perception/fusion/base",

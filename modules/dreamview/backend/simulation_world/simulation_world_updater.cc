@@ -16,8 +16,9 @@
 
 #include "modules/dreamview/backend/simulation_world/simulation_world_updater.h"
 
-#include "cyber/common/file.h"
 #include "google/protobuf/util/json_util.h"
+
+#include "cyber/common/file.h"
 #include "modules/common/util/json_util.h"
 #include "modules/common/util/map_util.h"
 #include "modules/dreamview/backend/common/dreamview_gflags.h"
@@ -402,8 +403,8 @@ bool SimulationWorldUpdater::ValidateCoordinate(const nlohmann::json &json) {
 }
 
 void SimulationWorldUpdater::Start() {
-  timer_.reset(new cyber::Timer(kSimWorldTimeIntervalMs,
-                                [this]() { this->OnTimer(); }, false));
+  timer_.reset(new cyber::Timer(
+      kSimWorldTimeIntervalMs, [this]() { this->OnTimer(); }, false));
   timer_->Start();
 }
 
@@ -412,6 +413,8 @@ void SimulationWorldUpdater::OnTimer() {
 
   {
     boost::unique_lock<boost::shared_mutex> writer_lock(mutex_);
+    last_pushed_adc_timestamp_sec_ =
+        sim_world_service_.world().auto_driving_car().timestamp_sec();
     sim_world_service_.GetWireFormatString(
         FLAGS_sim_map_radius, &simulation_world_,
         &simulation_world_with_planning_data_);
